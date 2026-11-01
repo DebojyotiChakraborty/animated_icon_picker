@@ -1,38 +1,71 @@
 import 'package:flutter/material.dart';
 
+import '../services/app_icon_service.dart';
+import 'icon_picker_sheet.dart';
+import 'sheet_presenter.dart';
+
 /// The list screen behind the picker: a large title and one inset row.
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  void _openPicker(BuildContext context) {
-    // Wired up once the picker sheet exists.
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _presenter = GlobalKey<SheetPresenterState>();
+  String _currentId = kAppIcons.first.id;
+
+  @override
+  void initState() {
+    super.initState();
+    AppIconService.getCurrent().then((id) {
+      if (mounted) setState(() => _currentId = id);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    for (final icon in kAppIcons) {
+      precacheImage(AssetImage(icon.assetPath), context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 44, 16, 32),
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 4, bottom: 12),
-              child: Text(
-                'App Icon Picker',
-                style: TextStyle(
-                  fontSize: 34,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.4,
-                  color: Colors.black,
+    return SheetPresenter(
+      key: _presenter,
+      sheetBuilder: (context, stretch, close) => IconPickerSheet(
+        currentId: _currentId,
+        stretch: stretch,
+        onClose: close,
+        onActivated: (id) => setState(() => _currentId = id),
+      ),
+      child: Scaffold(
+        body: SafeArea(
+          bottom: false,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 44, 16, 32),
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 4, bottom: 12),
+                child: Text(
+                  'App Icon Picker',
+                  style: TextStyle(
+                    fontSize: 34,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.4,
+                    color: Colors.black,
+                  ),
                 ),
               ),
-            ),
-            _InsetRow(
-              label: 'Change App Icon',
-              onTap: () => _openPicker(context),
-            ),
-          ],
+              _InsetRow(
+                label: 'Change App Icon',
+                onTap: () => _presenter.currentState?.open(),
+              ),
+            ],
+          ),
         ),
       ),
     );
