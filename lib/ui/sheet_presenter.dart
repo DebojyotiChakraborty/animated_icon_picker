@@ -147,7 +147,10 @@ class SheetPresenterState extends State<SheetPresenter>
                     onVerticalDragStart: _onDragStart,
                     onVerticalDragUpdate: _onDragUpdate,
                     onVerticalDragEnd: _onDragEnd,
-                    child: widget.sheetBuilder(context, stretch, close),
+                    child: Material(
+                      type: MaterialType.transparency,
+                      child: widget.sheetBuilder(context, stretch, close),
+                    ),
                   ),
                 );
               },
