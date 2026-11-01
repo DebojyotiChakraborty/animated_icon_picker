@@ -1,6 +1,7 @@
 package com.debojyoti.animated_icon_picker
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.pm.PackageManager
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -13,7 +14,7 @@ class MainActivity : FlutterActivity() {
             .setMethodCallHandler { call, result ->
                 when (call.method) {
                     "isSupported" -> result.success(true)
-                    "getCurrent" -> result.success(currentIconId())
+                    "getCurrent" -> result.success(pendingIconId() ?: currentIconId())
                     "setIcon" -> {
                         val id = call.arguments as? String
                             ?: call.argument<String>("id")
@@ -22,7 +23,7 @@ class MainActivity : FlutterActivity() {
                             return@setMethodCallHandler
                         }
                         try {
-                            setIcon(id)
+                            requestIcon(id)
                             result.success(null)
                         } catch (e: Exception) {
                             result.error("set_icon_failed", e.message, null)
@@ -31,6 +32,27 @@ class MainActivity : FlutterActivity() {
                     else -> result.notImplemented()
                 }
             }
+    }
+
+    /**
+     * Disabling the alias this task was launched from finishes the task, even
+     * with DONT_KILL_APP. So the switch is only recorded here and applied once
+     * the app leaves the foreground, in [onStop].
+     */
+    private fun requestIcon(id: String) {
+        val prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+        if (id == currentIconId()) prefs.remove(KEY_PENDING) else prefs.putString(KEY_PENDING, id)
+        prefs.apply()
+    }
+
+    private fun pendingIconId(): String? =
+        getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY_PENDING, null)
+
+    override fun onStop() {
+        super.onStop()
+        val pending = pendingIconId() ?: return
+        getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().remove(KEY_PENDING).apply()
+        if (pending in ALIASES && pending != currentIconId()) setIcon(pending)
     }
 
     private fun aliasComponent(id: String) =
@@ -77,6 +99,8 @@ class MainActivity : FlutterActivity() {
     companion object {
         private const val CHANNEL = "animated_icon_picker/app_icon"
         private const val DEFAULT_ID = "default"
+        private const val PREFS = "app_icon"
+        private const val KEY_PENDING = "pending_icon"
 
         /** Dart icon id -> <activity-alias> name in AndroidManifest.xml. */
         private val ALIASES = linkedMapOf(
