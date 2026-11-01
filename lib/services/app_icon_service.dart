@@ -83,9 +83,11 @@ class AppIconService {
     }
   }
 
-  /// Switches to the icon with [id]. Completes once the platform has applied
-  /// the change; throws a [PlatformException] if it fails. Does nothing where
-  /// the native channel is missing.
+  /// Switches to the icon with [id]; throws a [PlatformException] if it fails.
+  /// On iOS this completes once the system has applied the change. On Android
+  /// the launcher alias is switched when the app next leaves the foreground,
+  /// because disabling the alias the task was launched from closes the app.
+  /// Does nothing where the native channel is missing.
   static Future<void> setIcon(String id) async {
     try {
       await _channel.invokeMethod<void>('setIcon', id);
