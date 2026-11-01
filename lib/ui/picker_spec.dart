@@ -1,4 +1,3 @@
-import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 
 /// Measured constants for the icon picker, in logical pixels.
