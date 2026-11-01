@@ -94,9 +94,7 @@ class _RollingDigitState extends State<_RollingDigit>
           clipBehavior: Clip.none,
           children: [
             if (_previous != null && t < 1)
-              Positioned.fill(
-                child: _layer(_previous!, -travel * t, 1 - t),
-              ),
+              Positioned.fill(child: _layer(_previous!, -travel * t, 1 - t)),
             _layer(widget.digit, travel * (1 - t), t),
           ],
         );

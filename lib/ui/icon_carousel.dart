@@ -80,9 +80,7 @@ class IconCarousel extends StatelessWidget {
         final centre = Offset(constraints.maxWidth / 2, iconCenterY);
         return Stack(
           clipBehavior: Clip.none,
-          children: [
-            for (final i in visible) _positioned(i, i - page, centre),
-          ],
+          children: [for (final i in visible) _positioned(i, i - page, centre)],
         );
       },
     );

@@ -16,8 +16,7 @@ Offset carouselOffset(double p) {
   return PickerSpec.neighbourOffset * p + PickerSpec.arcBulge * (p * (1 - a));
 }
 
-double carouselScale(double p) =>
-    1 - (1 - PickerSpec.neighbourScale) * _t(p);
+double carouselScale(double p) => 1 - (1 - PickerSpec.neighbourScale) * _t(p);
 
 /// Rotation in radians. Both sides turn counter-clockwise.
 double carouselRotation(double p) =>
