@@ -65,7 +65,9 @@ abstract final class PickerSpec {
   static const Duration buttonTextOut = Duration(milliseconds: 120);
   static const Duration buttonTextIn = Duration(milliseconds: 250);
 
-  // Carousel
+  // Carousel. Horizontal travel scales with the sheet width so neighbours
+  // are clipped by the sheet edge the same way on wider screens.
+  static const double referenceSheetWidth = 386;
   static const Offset neighbourOffset = Offset(157.7, -63.4);
   static const Offset arcBulge = Offset(68.2, 49.3);
   static const double neighbourScale = 0.705;

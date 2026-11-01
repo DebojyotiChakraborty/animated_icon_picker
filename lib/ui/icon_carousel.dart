@@ -78,16 +78,20 @@ class IconCarousel extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final centre = Offset(constraints.maxWidth / 2, iconCenterY);
+        final xScale = constraints.maxWidth / PickerSpec.referenceSheetWidth;
         return Stack(
           clipBehavior: Clip.none,
-          children: [for (final i in visible) _positioned(i, i - page, centre)],
+          children: [
+            for (final i in visible) _positioned(i, i - page, centre, xScale),
+          ],
         );
       },
     );
   }
 
-  Widget _positioned(int index, double p, Offset centre) {
-    final position = centre + carouselOffset(p);
+  Widget _positioned(int index, double p, Offset centre, double xScale) {
+    final offset = carouselOffset(p);
+    final position = centre + Offset(offset.dx * xScale, offset.dy);
     final sigma = carouselBlur(p);
     Widget child = Transform.rotate(
       angle: carouselRotation(p),
