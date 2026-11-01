@@ -87,6 +87,7 @@ abstract final class PickerText {
     fontWeight: FontWeight.w700,
     color: PickerSpec.accent,
     height: 1,
+    letterSpacing: 0,
   );
 
   static const TextStyle counterSmall = TextStyle(
@@ -96,6 +97,7 @@ abstract final class PickerText {
     fontWeight: FontWeight.w600,
     color: PickerSpec.counterSmallColor,
     height: 1,
+    letterSpacing: 0,
   );
 
   static const TextStyle name = TextStyle(
@@ -103,17 +105,20 @@ abstract final class PickerText {
     fontWeight: FontWeight.w600,
     color: Color(0xFF000000),
     height: 1,
+    letterSpacing: 0,
   );
 
   static const TextStyle caption = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w400,
     height: 23.8 / 15,
+    letterSpacing: 0,
     color: PickerSpec.captionColor,
   );
 
   static const TextStyle button = TextStyle(
     fontSize: 17,
     fontWeight: FontWeight.w400,
+    letterSpacing: 0,
   );
 }
